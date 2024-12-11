@@ -74,7 +74,7 @@ def handle_message(event):
             split_contents = split_content(full_content_2)
             line_bot_api.reply_message(
                 event.reply_token,
-                TextSendMessage(text=reply_name)
+                TextSendMessage(text=reply_name),
                 TextSendMessage(text=reply_link)
                         )
              for part in split_contents:
