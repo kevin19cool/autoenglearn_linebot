@@ -63,21 +63,28 @@ def handle_message(event):
         
         if not full_content_2:
             reply_message = "未找到文章！"
+            line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=reply_message)
+            )
         else:
-            reply_message ="文章名稱:"
-            reply_message =random_article["title"]
-            reply_message ="文章連結:"
-            reply_message =random_article["news_link"]
+            reply_title ="文章名稱:"+random_article["title"]
+            reply_link ="文章連結:"+random_article["news_link"]
+            line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=reply_title),
+            TextSendMessage(text=reply_link)
+            )
             #reply_message ="文章內容:"
             #reply_message =full_content_2
     else:
         reply_message = "請輸入 'news' 或 '新聞' 來隨機獲取一篇文章。"
 
     # 回應用戶訊息
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text=reply_message)
-    )
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=reply_message)
+        )
 
     
 if __name__ == "__main__":
