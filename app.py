@@ -68,8 +68,8 @@ def handle_message(event):
             reply_message =random_article["title"]
             reply_message ="文章連結:"
             reply_message =random_article["news_link"]
-            reply_message ="文章內容:"
-            reply_message =full_content_2
+            #reply_message ="文章內容:"
+            #reply_message =full_content_2
     else:
         reply_message = "請輸入 'news' 或 '新聞' 來隨機獲取一篇文章。"
 
