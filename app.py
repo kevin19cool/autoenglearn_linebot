@@ -64,7 +64,6 @@ def handle_message(event):
         if not full_content_2:
             reply_message = "未找到文章！"
         else:
-            reply_message = f"新聞連結：\n{random_article}\n\n文章內容：\n{article_content[:500]}..."  # 限制回傳內容長度
             reply_message ="文章名稱:"
             reply_message =random_article["title"]
             reply_message ="文章連結:"
