@@ -72,8 +72,10 @@ def handle_message(event):
             reply_link ="文章連結:"+random_article["news_link"]
             line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text=reply_title),
-            TextSendMessage(text=reply_link)
+            [
+                TextSendMessage(text=reply_title),
+                TextSendMessage(text=reply_link)
+            ]
             )
             #reply_message ="文章內容:"
             #reply_message =full_content_2
