@@ -21,6 +21,10 @@ LINE_CHANNEL_SECRET = "14200733689e76984c5cf98449663211"
 line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(LINE_CHANNEL_SECRET)
 
+# 用來分割過長的內容
+def split_content(content, max_length=500):
+    # 將文章內容分割成不超過指定字數的段落
+    return [content[i:i+max_length] for i in range(0, len(content), max_length)]
 
 def fetch_full_article_content(article_url):
     # 抓取文章頁面
@@ -70,6 +74,10 @@ def handle_message(event):
         else:
             reply_title ="文章名稱:"+random_article["title"]
             reply_link ="文章連結:"+random_article["news_link"]
+            reply_content = "文章內容:"
+            # 分割內容
+            split_contents = split_content(full_content_2)
+            # 回應文章標題和連結
             line_bot_api.reply_message(
             event.reply_token,
             [
@@ -77,8 +85,11 @@ def handle_message(event):
                 TextSendMessage(text=reply_link)
             ]
             )
-            #reply_message ="文章內容:"
-            #reply_message =full_content_2
+             for part in split_contents:
+                line_bot_api.reply_message(
+                    event.reply_token,
+                    TextSendMessage(text=part),
+                )
     else:
         reply_message = "請輸入 'news' 或 '新聞' 來隨機獲取一篇文章。"
 
