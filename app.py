@@ -113,13 +113,7 @@ def handle_message(event):
                 )
 
     else:
-        reply_message = "請輸入 'news' 或 '新聞' 來隨機獲取一篇文章。"
 
-    # 回應用戶訊息
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=reply_message)
-        )
 
     
 if __name__ == "__main__":
