@@ -107,10 +107,11 @@ def handle_message(event):
             ]
             )
             for part in split_contents:
-                line_bot_api.reply_message(
-                    event.reply_token,
+                line_bot_api.push_message(
+                    event.source.user_id,
                     TextSendMessage(text=part),
                 )
+
     else:
         reply_message = "請輸入 'news' 或 '新聞' 來隨機獲取一篇文章。"
 
