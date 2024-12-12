@@ -12,6 +12,7 @@ import requests
 from bs4 import BeautifulSoup
 import random
 import bbc
+import re
 
 app = Flask(__name__)
 # 設定 Channel Access Token 和 Channel Secret
@@ -22,9 +23,25 @@ line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(LINE_CHANNEL_SECRET)
 
 # 用來分割過長的內容
-def split_content(content, max_length=500):
-    # 將文章內容分割成不超過指定字數的段落
-    return [content[i:i+max_length] for i in range(0, len(content), max_length)]
+def split_sentences(content, max_length=500):
+    # 透過正則表達式，按照標點符號分割句子
+    sentences = re.split(r'(?<=[。！？!?.])', content)
+    segments = []
+    current_segment = ""
+
+    for sentence in sentences:
+        # 如果當前段落加上句子後超過最大長度，將當前段落加入結果
+        if len(current_segment) + len(sentence) > max_length:
+            segments.append(current_segment.strip())
+            current_segment = sentence
+        else:
+            current_segment += sentence
+
+    # 處理最後一段
+    if current_segment.strip():
+        segments.append(current_segment.strip())
+
+    return segments
 
 def fetch_full_article_content(article_url):
     # 抓取文章頁面
@@ -63,7 +80,7 @@ def handle_message(event):
         news_list = bbc.news.get_latest_news(bbc.Languages.English)
         random_article = random.choice(news_list)
         destination_link = random_article["news_link"]
-        full_content_2 = fetch_full_article_content(destination_link)
+        
         
         if not full_content_2:
             reply_message = "未找到文章！"
@@ -72,20 +89,24 @@ def handle_message(event):
             TextSendMessage(text=reply_message)
             )
         else:
+            full_content_2 = fetch_full_article_content(destination_link)
+            # 分割內容
+            split_contents = split_sentences(full_content_2)
+            
             reply_title ="文章名稱:"+random_article["title"]
             reply_link ="文章連結:"+random_article["news_link"]
             reply_content = "文章內容:"
-            # 分割內容
-            split_contents = split_content(full_content_2)
             # 回應文章標題和連結
             line_bot_api.reply_message(
             event.reply_token,
             [
                 TextSendMessage(text=reply_title),
-                TextSendMessage(text=reply_link)
+                TextSendMessage(text=reply_link),
+                TextSendMessage(text=reply_content)
+                
             ]
             )
-             for part in split_contents:
+            for part in split_contents:
                 line_bot_api.reply_message(
                     event.reply_token,
                     TextSendMessage(text=part),
