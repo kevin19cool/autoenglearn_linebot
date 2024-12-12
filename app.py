@@ -80,7 +80,7 @@ def handle_message(event):
         news_list = bbc.news.get_latest_news(bbc.Languages.English)
         random_article = random.choice(news_list)
         destination_link = random_article["news_link"]
-        
+        full_content_2 = fetch_full_article_content(destination_link)
         
         if not full_content_2:
             reply_message = "未找到文章！"
@@ -89,7 +89,7 @@ def handle_message(event):
             TextSendMessage(text=reply_message)
             )
         else:
-            full_content_2 = fetch_full_article_content(destination_link)
+
             # 分割內容
             split_contents = split_sentences(full_content_2)
             
